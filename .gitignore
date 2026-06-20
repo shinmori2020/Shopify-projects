@@ -5,6 +5,7 @@ Thumbs.db
 # Shopify公式スキル（vendored）— サイズ大＆再取得可能のためGit管理しない。
 # 自作スキル .claude/skills/shopify-theme-workflow は管理対象に残す。
 # 再取得方法は memory: shopify-sin-shop-dev-setup を参照（git sparse-checkout）。
+.claude/skills/shopify-liquid/
 .claude/skills/shopify-admin/
 .claude/skills/shopify-custom-data/
 .claude/skills/shopify-dev/
