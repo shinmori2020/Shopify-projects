@@ -1,0 +1,8 @@
+/* Komorebi カスタムCSS */
+
+/* ヒーロー大見出しはデスクトップで改行させない（モバイルは折り返し可） */
+@media screen and (min-width: 750px) {
+  .banner__heading {
+    white-space: nowrap;
+  }
+}

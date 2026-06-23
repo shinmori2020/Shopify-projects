@@ -6,21 +6,21 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "自然体で、心地いい毎日を",
+            "heading": "心地よさは、いちばんの贅沢。",
             "heading_size": "h0"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "上質な素材とミニマルなデザイン。長く愛せる、わたしの定番。",
+            "text": "肌に触れる天然素材、流行に流されないデザイン。長く愛せる日常着で、ふつうの毎日を少し豊かに。",
             "text_style": "body"
           }
         },
         "button": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "商品を見る",
+            "button_label_1": "コレクションを見る",
             "button_link_1": "shopify://collections/all",
             "button_style_secondary_1": true,
             "button_label_2": "",
@@ -38,9 +38,9 @@
         "image": "shopify://shop_images/komorebi-hero.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
-        "desktop_content_position": "bottom-center",
+        "desktop_content_position": "middle-left",
         "show_text_box": false,
-        "desktop_content_alignment": "center",
+        "desktop_content_alignment": "left",
         "color_scheme": "scheme-3",
         "mobile_content_alignment": "center",
         "stack_images_on_mobile": false,
@@ -53,14 +53,14 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Talk about your brand",
+            "heading": "Komorebiについて",
             "heading_size": "h1"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.<\/p>"
+            "text": "<p>「木漏れ日」のように、やわらかく日常に寄り添うブランドです。リネン・オーガニックコットン・ウールなど、肌になじむ天然素材だけを厳選し、流行に左右されないシンプルなデザインに仕立てています。<\/p><p>大切にしているのは、長く愛せること。着るほどに体になじみ、暮らしに静かな心地よさをもたらす——そんな日常着と暮らしの道具を、ひとつひとつ丁寧にお届けします。<\/p>"
           }
         }
       },
@@ -71,14 +71,14 @@
       "settings": {
         "color_scheme": "scheme-1",
         "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 0
+        "padding_top": 72,
+        "padding_bottom": 72
       }
     },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
-        "title": "Featured products",
+        "title": "おすすめ商品",
         "heading_size": "h2",
         "collection": "all",
         "products_to_show": 8,
@@ -95,108 +95,40 @@
         "padding_bottom": 36
       }
     },
-    "collage": {
-      "type": "collage",
+    "komorebi_promise": {
+      "type": "komorebi-promise",
       "blocks": {
-        "collection-0": {
-          "type": "collection",
+        "b1": {
+          "type": "promise",
           "settings": {
-            "collection": ""
+            "icon": "leaf",
+            "heading": "上質な天然素材",
+            "text": "<p>リネンやオーガニックコットン、ウールなど、肌に心地よい天然素材だけを厳選しています。季節を問わず快適に着られ、使うほどに風合いを増していきます。<\/p>"
           }
         },
-        "product": {
-          "type": "product",
+        "b2": {
+          "type": "promise",
           "settings": {
-            "product": "",
-            "second_image": false
+            "icon": "scissors",
+            "heading": "丁寧なものづくり",
+            "text": "<p>シンプルなデザインだからこそ、縫製やシルエットの細部まで妥協しません。長く着ても型崩れしにくい、丁寧な仕立てを大切にしています。<\/p>"
           }
         },
-        "collection-1": {
-          "type": "collection",
+        "b3": {
+          "type": "promise",
           "settings": {
-            "collection": ""
+            "icon": "hanger",
+            "heading": "長く使えるデザイン",
+            "text": "<p>流行に左右されない、ベーシックで上質なデザイン。何年先も気持ちよく着られる、毎日の定番になる一着をお届けします。<\/p>"
           }
         }
       },
-      "block_order": [
-        "collection-0",
-        "product",
-        "collection-1"
-      ],
+      "block_order": ["b1", "b2", "b3"],
       "settings": {
-        "heading": "Multimedia collage",
-        "heading_size": "h2",
-        "desktop_layout": "left",
-        "mobile_layout": "collage",
-        "color_scheme": "scheme-1",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "video": {
-      "type": "video",
-      "settings": {
-        "heading": "",
-        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
-        "heading_size": "h1",
-        "description": "",
-        "full_width": false,
-        "color_scheme": "scheme-1",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "multicolumn": {
-      "type": "multicolumn",
-      "blocks": {
-        "column1": {
-          "type": "column",
-          "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column2": {
-          "type": "column",
-          "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column3": {
-          "type": "column",
-          "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "column1",
-        "column2",
-        "column3"
-      ],
-      "settings": {
-        "title": "",
-        "heading_size": "h1",
-        "image_width": "third",
-        "image_ratio": "adapt",
-        "columns_desktop": 3,
-        "column_alignment": "center",
-        "background_style": "none",
-        "button_label": "",
-        "button_link": "",
-        "swipe_on_mobile": false,
-        "color_scheme": "scheme-1",
-        "columns_mobile": "1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "heading": "Komorebiの約束",
+        "color_scheme": "scheme-2",
+        "padding_top": 64,
+        "padding_bottom": 64
       }
     },
     "collection_list": {
@@ -223,8 +155,6 @@
     "rich_text",
     "featured_collection",
     "collection_list",
-    "collage",
-    "video",
-    "multicolumn"
+    "komorebi_promise"
   ]
 }
