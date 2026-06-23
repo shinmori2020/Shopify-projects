@@ -6,21 +6,21 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Image banner",
+            "heading": "自然体で、心地いい毎日を",
             "heading_size": "h0"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "Give customers details about the banner image(s) or content on the template.",
+            "text": "上質な素材とミニマルなデザイン。長く愛せる、わたしの定番。",
             "text_style": "body"
           }
         },
         "button": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "Shop all",
+            "button_label_1": "商品を見る",
             "button_link_1": "shopify://collections/all",
             "button_style_secondary_1": true,
             "button_label_2": "",
@@ -35,6 +35,7 @@
         "button"
       ],
       "settings": {
+        "image": "shopify://shop_images/komorebi-hero.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
         "desktop_content_position": "bottom-center",
@@ -85,7 +86,7 @@
         "color_scheme": "scheme-1",
         "show_view_all": false,
         "swipe_on_mobile": false,
-        "image_ratio": "adapt",
+        "image_ratio": "square",
         "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": false,
