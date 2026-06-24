@@ -8,22 +8,22 @@
         "footer-0": {
           "type": "link_list",
           "settings": {
-            "heading": "Quick links",
+            "heading": "ショップ",
             "menu": "footer"
           }
         },
         "footer-1": {
           "type": "link_list",
           "settings": {
-            "heading": "Info",
+            "heading": "インフォメーション",
             "menu": "footer"
           }
         },
         "footer-2": {
           "type": "text",
           "settings": {
-            "heading": "Our mission",
-            "subtext": "<p>Share contact information, store details, and brand content with your customers.<\/p>"
+            "heading": "Komorebiについて",
+            "subtext": "<p>木漏れ日のように、やわらかく日常に寄り添うブランドです。上質な天然素材とミニマルなデザインで、長く愛せる日常着と暮らしの道具をお届けします。<\/p>"
           }
         }
       },
@@ -35,7 +35,7 @@
       "settings": {
         "color_scheme": "scheme-1",
         "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
+        "newsletter_heading": "ニュースレターを購読する",
         "show_social": true,
         "enable_country_selector": false,
         "enable_language_selector": false,
