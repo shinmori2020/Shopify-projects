@@ -44,6 +44,18 @@
 
 ## 作業ログ（新しい順に追記）
 
+### 2026-06-24 トップを王道構成に再構成（USP帯・特集・お客様の声を追加）
+- 目的：ECトップの王道フロー（世界観→商品→探す→共感→信頼→行動）に整える
+- 手段：自作セクション2つ＋Dawn標準image-with-text＋Admin API(特集画像)
+- 追加/変更：
+  - `sections/komorebi-usp.liquid`（USP帯・SVGアイコン：送料無料/天然素材/30日返品）新規
+  - `sections/komorebi-reviews.liquid`（お客様の声・星評価＋引用＋名前）新規
+  - 特集：Dawn `image-with-text`＋画像 komorebi-feature.jpg(Burst woman-in-summer-fashion)
+  - 並び順：ヒーロー→USP帯→おすすめ商品→カテゴリー→特集→Komorebiについて→約束→お客様の声
+- 注意：カスタムセクションのblock設定 text型は**default必須（空文字NG）**。USPのsubtextでpushエラー→default入れて解消
+- コミット：未（次でまとめて）
+
+
 ### 2026-06-24 ストアの日本語・日本仕様化（言語/通貨/国/メニュー）
 - 目的：ヘッダー/フッター等を日本語・日本向けに
 - 手段：ストア設定（言語/通貨/マーケット）＋テーマ編集（footer-group.json）＋Admin API（メニュー名）

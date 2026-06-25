@@ -148,13 +148,53 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "komorebi_usp": {
+      "type": "komorebi-usp",
+      "blocks": {
+        "u1": { "type": "item", "settings": { "icon": "truck", "title": "¥10,000以上で送料無料", "subtext": "全国一律・対象外地域なし" } },
+        "u2": { "type": "item", "settings": { "icon": "leaf", "title": "上質な天然素材", "subtext": "厳選した素材だけを使用" } },
+        "u3": { "type": "item", "settings": { "icon": "return", "title": "30日間返品OK", "subtext": "安心してお試しください" } }
+      },
+      "block_order": ["u1", "u2", "u3"],
+      "settings": { "color_scheme": "scheme-2", "padding_top": 28, "padding_bottom": 28 }
+    },
+    "feature": {
+      "type": "image-with-text",
+      "blocks": {
+        "caption": { "type": "caption", "settings": { "caption": "FEATURE", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
+        "heading": { "type": "heading", "settings": { "heading": "リネンという、心地よさ", "heading_size": "h1" } },
+        "text": { "type": "text", "settings": { "text": "<p>通気性にすぐれ、使うほどにやわらかく肌になじむリネン。季節を問わず心地よく、一枚で日常を上質に整えます。<\/p>", "text_style": "body" } },
+        "button": { "type": "button", "settings": { "button_label": "商品を見る", "button_link": "shopify://collections/all", "button_style_secondary": false } }
+      },
+      "block_order": ["caption", "heading", "text", "button"],
+      "settings": {
+        "image": "shopify://shop_images/komorebi-feature.jpg",
+        "layout": "image_first",
+        "color_scheme": "scheme-1",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "komorebi_reviews": {
+      "type": "komorebi-reviews",
+      "blocks": {
+        "rv1": { "type": "review", "settings": { "rating": 5, "quote": "肌ざわりがよく、毎日着たくなります。洗うほどに馴染むのも気に入っています。", "author": "東京都・30代 / A.K" } },
+        "rv2": { "type": "review", "settings": { "rating": 5, "quote": "シンプルで上質。長く使える定番に出会えました。", "author": "大阪府・40代 / M.S" } },
+        "rv3": { "type": "review", "settings": { "rating": 4, "quote": "素材が良く、合わせやすいです。また購入したいと思います。", "author": "福岡県・20代 / Y.T" } }
+      },
+      "block_order": ["rv1", "rv2", "rv3"],
+      "settings": { "heading": "お客様の声", "color_scheme": "scheme-1", "padding_top": 64, "padding_bottom": 64 }
     }
   },
   "order": [
     "image_banner",
-    "rich_text",
+    "komorebi_usp",
     "featured_collection",
     "collection_list",
-    "komorebi_promise"
+    "feature",
+    "rich_text",
+    "komorebi_promise",
+    "komorebi_reviews"
   ]
 }
