@@ -6,3 +6,38 @@
     white-space: nowrap;
   }
 }
+
+/* === Judge.me レビューカルーセルを Komorebi 仕様に調和（箱→白×極細枠×フラット） === */
+.jdgm-cards-carousel {
+  --card-color: #ffffff !important;     /* グレー#F9F9F9 → 白 */
+  --border-radius: 6px !important;       /* 16px → 控えめ */
+  --text-color: #2b2b2b !important;      /* ソフトな黒 */
+  --header-color: #2b2b2b !important;
+  --text-size: 15px !important;
+}
+/* カード：影を消し、上品なヘアライン枠に */
+.jdgm-cards-carousel .jdgm-rev-snippet-card {
+  box-shadow: none !important;
+  border: 1px solid #ece8e1 !important;
+}
+/* 見出しを他セクションの落ち着いたトーンに合わせる */
+.jdgm-cards-carousel .jdgm-title {
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+}
+/* 横幅を他セクション(page-width 120rem)と同じに広げる */
+.jdgm-cards-carousel {
+  --max-width: 120rem !important;
+}
+.jdgm-cards-carousel .jdgm-cards-wrapper,
+.jdgm-cards-carousel .jdgm-rev-snippet-widget__cards-container {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+/* 3枚のカードを均等に広げて横幅いっぱいに */
+.jdgm-cards-carousel .jdgm-rev-snippet-card {
+  flex: 1 1 0 !important;
+  max-width: none !important;
+}

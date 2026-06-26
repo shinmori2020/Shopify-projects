@@ -29,7 +29,7 @@
 - [ ] FAQ・ニュースレター登録の整備
 
 ### ③ あれば嬉しい（差別化/売上UP・優先順）
-- [ ] 商品レビュー（🧩）
+- [x] 商品レビュー（🧩 Judge.me 無料プラン導入済 2026-06-25）
 - [ ] かご落ちメール（🧩）
 - [ ] 予測検索＋高度な絞り込み（🧩 Search & Discovery）
 - [ ] アップセル/クロスセル/バンドル（🧩🛠）
@@ -42,7 +42,65 @@
 
 ---
 
+## アプリ導入チェックリスト（無料で実装できるもの）
+
+方針：**公式アプリ優先＋定番の無料枠**を厳選。⭐=おすすめ優先。入れすぎは表示速度・管理が重くなるので取捨選択する。
+
+### 導入済み
+- [x] Translate & Adapt（多言語・公式）※言語設定で使用
+- [x] ⭐Judge.me（商品レビュー・無料プラン）2026-06-25
+
+### 公式アプリ（完全無料・優先）
+- [ ] ⭐Shopify Search & Discovery（予測検索・絞り込み・関連商品）→ ③予測検索/絞り込み
+- [ ] ⭐Shopify Inbox（接客チャット）
+- [ ] Shopify Email（メルマガ配信／無料枠 月1万通）→ ②ニュースレター
+- [ ] Shopify Forms（登録ポップアップ・リスト獲得）→ ②ニュースレター
+- [ ] Shopify Bundles（セット販売・アップセル）→ ③バンドル
+- [ ] Shopify Subscriptions（定期購入）※アパレルでは任意
+
+### 定番サードパーティ（無料枠あり）
+- [ ] ⭐Smile.io（ポイント/会員/紹介）→ ③ポイント
+- [ ] Instafeed（Instagram連携ギャラリー・UGC）→ ③UGC
+- [ ] Wishlist系（お気に入り）※無料のものを選定 → ③ウィッシュリスト
+- [ ] Back in Stock（入荷お知らせ）※無料枠 → ③入荷通知
+
+---
+
 ## 作業ログ（新しい順に追記）
+
+### 2026-06-26 レビューをトップへ＆「自作Liquid版」を併設（アプリvs自作）
+- 目的：トップ「お客様の声」を本物レビュー連動に。さらに独自性/デザイン性のため自作版も作って比較
+- 手段：Judge.me Cards Carousel（アプリ）＋ 自作セクション（メタフィールド読み）＋ カスタムCSS
+- 実装：
+  - トップの固定「お客様の声」→ Judge.me **Reviews Carousel** に差し替え（本物レビューが自動表示）
+  - `assets/komorebi-custom.css` に **カルーセル調和CSS**（`--card-color`白化/角丸6px/影なし/page-width幅）を追記
+  - **自作セクション `sections/komorebi-reviews-native.liquid` 新規**：`product.metafields.judgeme.review_widget_data`(json) と標準 `reviews.rating` を Liquid で読み、独自デザイン表示（全商品ループ→最新N件・列数・最低★を設定可）
+  - トップのアプリ版カルーセルの**下**に自作版を配置（見比べ用）
+- 学び：Judge.meは収集レビューを**Shopifyメタフィールドに書き出す**（`judgeme.review_widget_data`=全文JSON / `reviews.rating`=平均 / `reviews.rating_count`=件数）。→ **収集=アプリ / 表示=自作Liquid** の使い分けが可能。新レビューは自動反映（同期+キャッシュで数十秒〜数分の遅延／メタフィールドは件数上限あり）
+- 反映：CSS・新セクションは `--only` で claude-draft(live) に push 済み。index.json はエディタ編集分を壊さないため触らず、配置はエディタで実施
+- コミット：未（次でまとめて）／レビューCSV・画像URL取得はGit対象外
+
+### 2026-06-26 テーマを claude-draft に統一・公開(live化)
+- 目的：本番テーマを最新の `claude-draft` に一本化（test-dataとの分裂を解消）
+- 背景：公開中=test-data（旧・作り込み無し）、作業=claude-draft（最新・全部入り）に分かれており、Judge.meがtest-dataに入って表示されない事故が発生
+- 手順：オンラインストア→テーマ→`claude-draft`を「公開する」
+- 結果：**`claude-draft` が本番(live)に。`test-data` は下書き（バックアップ）に降格**。以後アプリ/編集はclaude-draftに統一
+- 次：本番ページ確認／レビューのデザイン仕上げ＋★バッジ／英語残り(You may also like等)の和訳／無料アプリ追加
+
+### 2026-06-25 アプリ①：Judge.me（商品レビュー）導入・実装
+- 目的：「お客様の声」を本物の投稿レビューと連動／商品ページにレビュー機能を追加
+- 手段：Shopify App Store からインストール（無料プラン）＋テーマ組込（claude-draft）＋CSVインポート
+- 手順：
+  1. Judge.me インストール（無料プラン）。ウィジェット言語=日本語／ブランドカラー #1F7A5A
+  2. デモレビュー14件をCSVで一括インポート（`komorebi-products.csv`とは別の `komorebi-reviews.csv`／商品ハンドルで紐付け）
+  3. ⚠️テーマ不一致が発覚：公開中=`test-data`、作業中=`claude-draft`。Judge.meは当初 test-data に入り claude-draft では非表示だった
+  4. `claude-draft` 側で App embed「Judge.me」をON＋商品ページに Review Widget を**独立セクション**で追加（商品情報の右列だと狭いため）
+  5. 商品ページ末尾の英語仮セクション（テキスト付き画像/マルチカラム/Button label）を削除
+- 結果：商品ページに日本語レビュー表示（例 wool-knit ★4.5/2件）。緑の星でブランド統一
+- 残：★星評価バッジを商品名下に追加／レビューのデザイン仕上げ（A案ミニマル）／関連商品見出し「You may also like」等の和訳
+- ★重要：**最終的にテーマを `claude-draft` に統一して公開（live化）する必要あり**（現在 live は test-data の古い版）
+- コミット：未（レビューCSVはGit対象外でOK）
+
 
 ### 2026-06-24 トップを王道構成に再構成（USP帯・特集・お客様の声を追加）
 - 目的：ECトップの王道フロー（世界観→商品→探す→共感→信頼→行動）に整える
