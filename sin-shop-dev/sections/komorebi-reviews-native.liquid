@@ -2,75 +2,106 @@
   Komorebi 自作レビュー（アプリ非依存の表示）
   Judge.me が各商品に書き出すメタフィールド `judgeme.review_widget_data`(json) を読み、
   自作デザインでレビューを表示する。収集=アプリ / 表示=自作Liquid の「いいとこ取り」実装。
+  表示スタイル：grid（3列）/ carousel（全幅・自動スクロール）を schema で切替。
 {%- endcomment -%}
 
 {%- assign max = section.settings.max_reviews -%}
 {%- assign min_rating = section.settings.min_rating -%}
+{%- assign layout = section.settings.layout -%}
 {%- if section.settings.collection != blank -%}
   {%- assign source = section.settings.collection.products -%}
 {%- else -%}
   {%- assign source = collections.all.products -%}
 {%- endif -%}
 
-<div class="color-{{ section.settings.color_scheme }} gradient">
-  <div class="page-width komorebi-nrev" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+{%- capture cards -%}
+  {%- assign shown = 0 -%}
+  {%- for product in source -%}
+    {%- assign data = product.metafields.judgeme.review_widget_data.value -%}
+    {%- if data and data.reviews -%}
+      {%- for rev in data.reviews -%}
+        {%- if rev.rating >= min_rating -%}
+          {%- if shown >= max -%}{%- break -%}{%- endif -%}
+          <article class="komorebi-nrev__card">
+            <div class="komorebi-nrev__stars" aria-label="5段階中{{ rev.rating }}">
+              {%- for i in (1..5) -%}
+                {%- if i <= rev.rating -%}
+                  <span class="komorebi-nrev__star is-on">★</span>
+                {%- else -%}
+                  <span class="komorebi-nrev__star">★</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+            <p class="komorebi-nrev__body">{{ rev.body | strip_html | escape }}</p>
+            <footer class="komorebi-nrev__meta">
+              <span class="komorebi-nrev__author">{{ rev.reviewer_name | escape }}</span>
+              <span class="komorebi-nrev__dot">・</span>
+              <a class="komorebi-nrev__product" href="{{ product.url }}">{{ product.title | escape }}</a>
+              {%- if rev.created_at -%}
+                <span class="komorebi-nrev__date">{{ rev.created_at | date: "%Y/%m/%d" }}</span>
+              {%- endif -%}
+            </footer>
+          </article>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- if shown >= max -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign cards_stripped = cards | strip -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient komorebi-nrev komorebi-nrev--{{ layout }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width">
     {%- if section.settings.heading != blank -%}
       <h2 class="komorebi-nrev__heading">{{ section.settings.heading | escape }}</h2>
     {%- endif -%}
     {%- if section.settings.subheading != blank -%}
       <p class="komorebi-nrev__sub">{{ section.settings.subheading | escape }}</p>
     {%- endif -%}
-
-    {%- assign shown = 0 -%}
-    <div class="komorebi-nrev__grid" style="--nrev-cols: {{ section.settings.columns }};">
-      {%- for product in source -%}
-        {%- assign data = product.metafields.judgeme.review_widget_data.value -%}
-        {%- if data and data.reviews -%}
-          {%- for rev in data.reviews -%}
-            {%- if rev.rating >= min_rating -%}
-              {%- if shown >= max -%}{%- break -%}{%- endif -%}
-              <article class="komorebi-nrev__card">
-                <div class="komorebi-nrev__stars" aria-label="5段階中{{ rev.rating }}">
-                  {%- for i in (1..5) -%}
-                    {%- if i <= rev.rating -%}
-                      <span class="komorebi-nrev__star is-on">★</span>
-                    {%- else -%}
-                      <span class="komorebi-nrev__star">★</span>
-                    {%- endif -%}
-                  {%- endfor -%}
-                </div>
-                <p class="komorebi-nrev__body">{{ rev.body | strip_html | escape }}</p>
-                <footer class="komorebi-nrev__meta">
-                  <span class="komorebi-nrev__author">{{ rev.reviewer_name | escape }}</span>
-                  <span class="komorebi-nrev__dot">・</span>
-                  <a class="komorebi-nrev__product" href="{{ product.url }}">{{ product.title | escape }}</a>
-                  {%- if rev.created_at -%}
-                    <span class="komorebi-nrev__date">{{ rev.created_at | date: "%Y/%m/%d" }}</span>
-                  {%- endif -%}
-                </footer>
-              </article>
-              {%- assign shown = shown | plus: 1 -%}
-            {%- endif -%}
-          {%- endfor -%}
-        {%- endif -%}
-        {%- if shown >= max -%}{%- break -%}{%- endif -%}
-      {%- endfor -%}
-    </div>
-
-    {%- if shown == 0 -%}
-      <p class="komorebi-nrev__empty">まだ表示できるレビューがありません。</p>
-    {%- endif -%}
   </div>
+
+  {%- if cards_stripped == blank -%}
+    <p class="komorebi-nrev__empty">まだ表示できるレビューがありません。</p>
+  {%- elsif layout == 'carousel' -%}
+    {%- assign n = shown -%}
+    {%- assign slot = 100.0 | divided_by: n -%}
+    {%- assign step = 50.0 | divided_by: n -%}
+    {%- assign pause = slot | times: 0.72 -%}
+    <style>
+      @keyframes komorebi-nrev-step-{{ section.id }} {
+        {%- for k in (0..n) -%}
+          {%- if k < n -%}
+            {%- assign sp = slot | times: k -%}
+            {%- assign hp = sp | plus: pause -%}
+            {%- assign ps = step | times: k -%}
+            {{ sp }}% { transform: translateX(-{{ ps }}%); }
+            {{ hp }}% { transform: translateX(-{{ ps }}%); }
+          {%- else -%}
+            100% { transform: translateX(-50%); }
+          {%- endif -%}
+        {%- endfor -%}
+      }
+    </style>
+    <div class="komorebi-nrev__viewport">
+      <div class="komorebi-nrev__track" style="animation: komorebi-nrev-step-{{ section.id }} {{ section.settings.speed }}s ease-in-out infinite;">
+        {{ cards }}{{ cards }}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="page-width">
+      <div class="komorebi-nrev__grid" style="--nrev-cols: {{ section.settings.columns }};">
+        {{ cards }}
+      </div>
+    </div>
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
 .komorebi-nrev__heading { text-align: center; margin: 0 0 0.4rem; font-weight: 400; letter-spacing: 0.04em; }
 .komorebi-nrev__sub { text-align: center; margin: 0 0 3rem; opacity: 0.7; font-size: 1.4rem; }
-.komorebi-nrev__grid {
-  display: grid;
-  grid-template-columns: repeat(var(--nrev-cols), 1fr);
-  gap: 2.4rem;
-}
+
+/* カード共通 */
 .komorebi-nrev__card {
   display: flex;
   flex-direction: column;
@@ -89,8 +120,26 @@
 .komorebi-nrev__product { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .komorebi-nrev__date { display: block; margin-top: 0.4rem; }
 .komorebi-nrev__empty { text-align: center; opacity: 0.6; }
+
+/* grid 表示 */
+.komorebi-nrev__grid { display: grid; grid-template-columns: repeat(var(--nrev-cols), 1fr); gap: 2.4rem; }
 @media screen and (max-width: 989px) { .komorebi-nrev__grid { grid-template-columns: repeat(2, 1fr); } }
 @media screen and (max-width: 749px) { .komorebi-nrev__grid { grid-template-columns: 1fr; } }
+
+/* carousel 表示（全幅・1カードずつ自動送り） */
+.komorebi-nrev__viewport { overflow: hidden; width: 100%; }
+.komorebi-nrev__track { display: flex; width: max-content; }
+.komorebi-nrev--carousel .komorebi-nrev__viewport:hover .komorebi-nrev__track { animation-play-state: paused !important; }
+.komorebi-nrev--carousel .komorebi-nrev__card {
+  flex: 0 0 auto;
+  width: clamp(320px, 34vw, 460px);
+  margin-right: 2.4rem;
+  white-space: normal;
+}
+@media (prefers-reduced-motion: reduce) {
+  .komorebi-nrev__track { animation: none !important; }
+  .komorebi-nrev__viewport { overflow-x: auto; }
+}
 {% endstylesheet %}
 
 {% schema %}
@@ -101,9 +150,14 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "見出し", "default": "お客様の声（自作版）" },
     { "type": "text", "id": "subheading", "label": "サブ見出し", "default": "Judge.meのデータをLiquidで自作表示" },
+    { "type": "select", "id": "layout", "label": "表示スタイル", "default": "carousel", "options": [
+      { "value": "carousel", "label": "カルーセル（全幅・自動スクロール）" },
+      { "value": "grid", "label": "グリッド（3列）" }
+    ] },
+    { "type": "range", "id": "speed", "min": 20, "max": 90, "step": 5, "unit": "s", "label": "スクロール一周の秒数（カルーセル）", "default": 45 },
     { "type": "collection", "id": "collection", "label": "対象コレクション（未指定なら全商品）" },
-    { "type": "range", "id": "max_reviews", "min": 3, "max": 12, "step": 1, "label": "表示するレビュー数", "default": 6 },
-    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "列数（PC）", "default": 3 },
+    { "type": "range", "id": "max_reviews", "min": 3, "max": 12, "step": 1, "label": "表示するレビュー数", "default": 8 },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "列数（グリッド時）", "default": 3 },
     { "type": "range", "id": "min_rating", "min": 1, "max": 5, "step": 1, "label": "表示する最低★評価", "default": 1 },
     { "type": "color_scheme", "id": "color_scheme", "label": "配色", "default": "scheme-1" },
     { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "上余白", "default": 64 },
