@@ -1,8 +1,8 @@
 {%- comment -%}
   Komorebi 自作レビュー（アプリ非依存の表示）
-  Judge.me が各商品に書き出すメタフィールド `judgeme.review_widget_data`(json) を読み、
-  自作デザインでレビューを表示する。収集=アプリ / 表示=自作Liquid の「いいとこ取り」実装。
-  表示スタイル：grid（3列）/ carousel（全幅・自動スクロール）を schema で切替。
+  Judge.me の judgeme.review_widget_data(json) を読み、自作デザインで表示。
+  - grid / carousel（全幅・1カードずつ自動送り）切替
+  - 本文は指定行数で「…」省略 → クリックでモーダル全文表示 →「この商品を見る」で商品ページへ
 {%- endcomment -%}
 
 {%- assign max = section.settings.max_reviews -%}
@@ -22,22 +22,31 @@
       {%- for rev in data.reviews -%}
         {%- if rev.rating >= min_rating -%}
           {%- if shown >= max -%}{%- break -%}{%- endif -%}
-          <article class="komorebi-nrev__card">
+          <article class="komorebi-nrev__card{% if section.settings.enable_modal %} komorebi-nrev__card--clickable{% endif %}"
+            data-rating="{{ rev.rating }}"
+            data-body="{{ rev.body | strip_html | escape }}"
+            data-author="{{ rev.reviewer_name | escape }}"
+            data-product="{{ product.title | escape }}"
+            data-url="{{ product.url }}"
+            data-date="{{ rev.created_at | date: '%Y/%m/%d' }}"
+            {% if section.settings.enable_modal %}tabindex="0" role="button" aria-label="レビュー全文を見る"{% endif %}>
             <div class="komorebi-nrev__stars" aria-label="5段階中{{ rev.rating }}">
               {%- for i in (1..5) -%}
-                {%- if i <= rev.rating -%}
-                  <span class="komorebi-nrev__star is-on">★</span>
-                {%- else -%}
-                  <span class="komorebi-nrev__star">★</span>
-                {%- endif -%}
+                {%- if i <= rev.rating -%}<span class="komorebi-nrev__star is-on">★</span>{%- else -%}<span class="komorebi-nrev__star">★</span>{%- endif -%}
               {%- endfor -%}
             </div>
             <p class="komorebi-nrev__body">{{ rev.body | strip_html | escape }}</p>
+            {%- if section.settings.enable_modal -%}
+              <button type="button" class="komorebi-nrev__more" hidden tabindex="-1">{{ section.settings.read_more_label | escape }}</button>
+            {%- endif -%}
             <footer class="komorebi-nrev__meta">
-              <span class="komorebi-nrev__author">{{ rev.reviewer_name | escape }}</span>
-              <span class="komorebi-nrev__dot">・</span>
-              <a class="komorebi-nrev__product" href="{{ product.url }}">{{ product.title | escape }}</a>
-              {%- if rev.created_at -%}
+              <span class="komorebi-nrev__meta-line">
+                <span class="komorebi-nrev__author">{{ rev.reviewer_name | escape }}</span>
+                {%- if section.settings.show_product -%}
+                  <span class="komorebi-nrev__dot">・</span><a class="komorebi-nrev__product" href="{{ product.url }}">{{ product.title | escape }}</a>
+                {%- endif -%}
+              </span>
+              {%- if section.settings.show_date and rev.created_at -%}
                 <span class="komorebi-nrev__date">{{ rev.created_at | date: "%Y/%m/%d" }}</span>
               {%- endif -%}
             </footer>
@@ -50,14 +59,46 @@
   {%- endfor -%}
 {%- endcapture -%}
 {%- assign cards_stripped = cards | strip -%}
+{%- assign card_vw = 100.0 | divided_by: section.settings.visible -%}
 
-<div class="color-{{ section.settings.color_scheme }} gradient komorebi-nrev komorebi-nrev--{{ layout }}" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+{%- comment -%} 全商品から平均★・件数を集計（加重平均） {%- endcomment -%}
+{%- assign total_count = 0 -%}
+{%- assign weighted = 0 -%}
+{%- for product in source -%}
+  {%- assign d = product.metafields.judgeme.review_widget_data.value -%}
+  {%- if d and d.number_of_reviews > 0 -%}
+    {%- assign total_count = total_count | plus: d.number_of_reviews -%}
+    {%- assign sub = d.average_rating | times: d.number_of_reviews -%}
+    {%- assign weighted = weighted | plus: sub -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign overall = 0 -%}
+{%- if total_count > 0 -%}{%- assign overall = weighted | divided_by: total_count | round: 2 -%}{%- endif -%}
+{%- assign star_pct = overall | times: 20 -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient komorebi-nrev komorebi-nrev--{{ layout }}"
+  id="komorebi-nrev-{{ section.id }}"
+  style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; --nrev-vw: {{ card_vw }}vw; --nrev-lines: {{ section.settings.body_lines }}; --nrev-star: {{ section.settings.star_color }}; --nrev-card-bg: {{ section.settings.card_bg }}; --nrev-card-border: {{ section.settings.card_border }}; --nrev-radius: {{ section.settings.card_radius }}px;">
+  <style>
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary { display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin: -2.2rem 0 3rem; }
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary-stars { position: relative; display: inline-block; font-size: 1.7rem; letter-spacing: 0.12em; line-height: 1; }
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary-base { color: #d9d4ca; }
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary-fill { position: absolute; top: 0; left: 0; overflow: hidden; white-space: nowrap; color: var(--nrev-star, #1f7a5a); }
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary-text { font-size: 1.4rem; opacity: 0.75; }
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary-text .komorebi-nrev__summary-star { color: var(--nrev-star, #1f7a5a); }
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__body { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: {{ section.settings.body_lines }}; line-clamp: {{ section.settings.body_lines }}; overflow: hidden; }
+  </style>
   <div class="page-width">
-    {%- if section.settings.heading != blank -%}
-      <h2 class="komorebi-nrev__heading">{{ section.settings.heading | escape }}</h2>
-    {%- endif -%}
-    {%- if section.settings.subheading != blank -%}
-      <p class="komorebi-nrev__sub">{{ section.settings.subheading | escape }}</p>
+    {%- if section.settings.heading != blank -%}<h2 class="komorebi-nrev__heading">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+    {%- if section.settings.subheading != blank -%}<p class="komorebi-nrev__sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+    {%- if section.settings.show_summary and total_count > 0 -%}
+      <div class="komorebi-nrev__summary">
+        <span class="komorebi-nrev__summary-stars" aria-hidden="true">
+          <span class="komorebi-nrev__summary-base">★★★★★</span>
+          <span class="komorebi-nrev__summary-fill" style="width: {{ star_pct }}%;">★★★★★</span>
+        </span>
+        <span class="komorebi-nrev__summary-text">{{ overall }} <span class="komorebi-nrev__summary-star">★</span>（{{ total_count }}件）</span>
+      </div>
     {%- endif -%}
   </div>
 
@@ -90,12 +131,104 @@
     </div>
   {%- else -%}
     <div class="page-width">
-      <div class="komorebi-nrev__grid" style="--nrev-cols: {{ section.settings.columns }};">
-        {{ cards }}
+      <div class="komorebi-nrev__grid" style="--nrev-cols: {{ section.settings.columns }};">{{ cards }}</div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.enable_modal -%}
+    <style>
+      .komorebi-nrev__modal { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 2rem; background: rgba(0,0,0,0.55); opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
+      .komorebi-nrev__modal.is-open { opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0s; }
+      .komorebi-nrev__modal-overlay { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
+      .komorebi-nrev__modal-box { position: relative; z-index: 1; background: #fff; width: 100%; max-width: 560px; max-height: 85vh; overflow: auto; border-radius: 8px; padding: 3.6rem 2.8rem 2.8rem; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transform: translateY(12px); transition: transform 0.3s ease; }
+      .komorebi-nrev__modal.is-open .komorebi-nrev__modal-box { transform: none; }
+      .komorebi-nrev__modal-close { position: absolute; top: 0.6rem; right: 1rem; background: none; border: 0; font-size: 2.6rem; line-height: 1; cursor: pointer; color: #333; }
+      .komorebi-nrev__modal-stars { letter-spacing: 0.15em; font-size: 1.8rem; color: #d9d4ca; margin-bottom: 1.2rem; }
+      .komorebi-nrev__modal-stars .is-on { color: var(--nrev-star, #1f7a5a); }
+      .komorebi-nrev__modal-body { line-height: 1.9; margin: 0 0 1.6rem; white-space: pre-wrap; }
+      .komorebi-nrev__modal-meta { font-size: 1.3rem; opacity: 0.7; margin-bottom: 2rem; }
+      .komorebi-nrev__modal-link { display: inline-block; padding: 1.1rem 2.2rem; background: var(--nrev-star, #1f7a5a); color: #fff; border-radius: 4px; text-decoration: none; }
+      @media screen and (max-width: 749px) {
+        .komorebi-nrev__modal { align-items: flex-end; padding: 0; }
+        .komorebi-nrev__modal-box { max-height: 90vh; border-radius: 16px 16px 0 0; transform: translateY(100%); }
+        .komorebi-nrev__modal.is-open .komorebi-nrev__modal-box { transform: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .komorebi-nrev__modal, .komorebi-nrev__modal-box { transition: none; }
+      }
+    </style>
+    <div class="komorebi-nrev__modal" id="komorebi-nrev-modal-{{ section.id }}" style="--nrev-star: {{ section.settings.star_color }};">
+      <div class="komorebi-nrev__modal-overlay" data-close></div>
+      <div class="komorebi-nrev__modal-box" role="dialog" aria-modal="true" aria-label="レビュー全文">
+        <button type="button" class="komorebi-nrev__modal-close" data-close aria-label="閉じる">×</button>
+        <div class="komorebi-nrev__modal-stars"></div>
+        <p class="komorebi-nrev__modal-body"></p>
+        <div class="komorebi-nrev__modal-meta"></div>
+        <a class="komorebi-nrev__modal-link" href="#">{{ section.settings.product_button_label | escape }}</a>
       </div>
     </div>
   {%- endif -%}
 </div>
+
+{%- if section.settings.enable_modal -%}
+<script>
+(function(){
+  var root = document.getElementById('komorebi-nrev-{{ section.id }}');
+  if(!root) return;
+  var modal = document.getElementById('komorebi-nrev-modal-{{ section.id }}');
+  if(!modal) return;
+  // 親要素の影響（重なり順・transform）を避けるため body 直下へ移動
+  if(modal.parentElement !== document.body){ document.body.appendChild(modal); }
+
+  root.querySelectorAll('.komorebi-nrev__body').forEach(function(b){
+    if(b.scrollHeight - b.clientHeight > 2){
+      var card = b.closest('.komorebi-nrev__card');
+      var more = card && card.querySelector('.komorebi-nrev__more');
+      if(more){ more.hidden = false; }
+    }
+  });
+
+  function open(card){
+    var r = parseInt(card.getAttribute('data-rating'), 10) || 0;
+    var stars = '';
+    for(var i=1;i<=5;i++){ stars += '<span class="komorebi-nrev__star'+(i<=r?' is-on':'')+'">★</span>'; }
+    modal.querySelector('.komorebi-nrev__modal-stars').innerHTML = stars;
+    modal.querySelector('.komorebi-nrev__modal-body').textContent = card.getAttribute('data-body') || '';
+    var meta = card.getAttribute('data-author') || '';
+    if(card.getAttribute('data-product')){ meta += ' ・ ' + card.getAttribute('data-product'); }
+    if(card.getAttribute('data-date')){ meta += ' ・ ' + card.getAttribute('data-date'); }
+    modal.querySelector('.komorebi-nrev__modal-meta').textContent = meta;
+    var link = modal.querySelector('.komorebi-nrev__modal-link');
+    var url = card.getAttribute('data-url');
+    if(url){ link.href = url; link.hidden = false; } else { link.hidden = true; }
+    modal.classList.add('is-open');
+    root.classList.add('is-modal-open');
+    var close = modal.querySelector('.komorebi-nrev__modal-close');
+    if(close){ close.focus(); }
+  }
+  function close(){
+    modal.classList.remove('is-open');
+    root.classList.remove('is-modal-open');
+  }
+
+  root.querySelectorAll('.komorebi-nrev__card').forEach(function(card){
+    card.addEventListener('click', function(e){
+      if(e.target.closest('a')){ return; }
+      open(card);
+    });
+    card.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(card); }
+    });
+  });
+  modal.addEventListener('click', function(e){
+    if(e.target === modal || e.target.hasAttribute('data-close')){ close(); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('is-open')){ close(); }
+  });
+})();
+</script>
+{%- endif -%}
 
 {% stylesheet %}
 .komorebi-nrev__heading { text-align: center; margin: 0 0 0.4rem; font-weight: 400; letter-spacing: 0.04em; }
@@ -107,14 +240,18 @@
   flex-direction: column;
   gap: 1rem;
   padding: 2.4rem 2rem;
-  border: 1px solid #ece8e1;
-  border-radius: 6px;
-  background: #fff;
+  border: 1px solid var(--nrev-card-border, #ece8e1);
+  border-radius: var(--nrev-radius, 6px);
+  background: var(--nrev-card-bg, #fff);
 }
+.komorebi-nrev__card--clickable { cursor: pointer; }
+.komorebi-nrev__card--clickable:focus-visible { outline: 2px solid var(--nrev-star, #1f7a5a); outline-offset: 2px; }
 .komorebi-nrev__stars { letter-spacing: 0.15em; font-size: 1.5rem; color: #d9d4ca; line-height: 1; }
-.komorebi-nrev__star.is-on { color: #1f7a5a; }
+.komorebi-nrev__star.is-on { color: var(--nrev-star, #1f7a5a); }
 .komorebi-nrev__body { margin: 0; line-height: 1.85; }
+.komorebi-nrev__more { align-self: flex-start; background: none; border: 0; padding: 0; cursor: pointer; color: var(--nrev-star, #1f7a5a); font-size: 1.2rem; text-decoration: underline; text-underline-offset: 2px; }
 .komorebi-nrev__meta { margin-top: auto; font-size: 1.2rem; opacity: 0.7; }
+.komorebi-nrev__meta-line { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .komorebi-nrev__author { font-weight: 600; opacity: 1; }
 .komorebi-nrev__dot { margin: 0 0.2rem; }
 .komorebi-nrev__product { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
@@ -129,17 +266,21 @@
 /* carousel 表示（全幅・1カードずつ自動送り） */
 .komorebi-nrev__viewport { overflow: hidden; width: 100%; }
 .komorebi-nrev__track { display: flex; width: max-content; }
-.komorebi-nrev--carousel .komorebi-nrev__viewport:hover .komorebi-nrev__track { animation-play-state: paused !important; }
+.komorebi-nrev--carousel .komorebi-nrev__viewport:hover .komorebi-nrev__track,
+.komorebi-nrev.is-modal-open .komorebi-nrev__track { animation-play-state: paused !important; }
 .komorebi-nrev--carousel .komorebi-nrev__card {
   flex: 0 0 auto;
-  width: clamp(320px, 34vw, 460px);
+  width: clamp(240px, calc(var(--nrev-vw, 20vw) - 2.4rem), 520px);
   margin-right: 2.4rem;
   white-space: normal;
 }
+/* 本文の行数省略(…)は配信欠落対策のためインライン<style>へ移動 */
 @media (prefers-reduced-motion: reduce) {
   .komorebi-nrev__track { animation: none !important; }
   .komorebi-nrev__viewport { overflow-x: auto; }
 }
+
+/* モーダルCSSは配信欠落対策のためインライン<style>に移動（markup側参照） */
 {% endstylesheet %}
 
 {% schema %}
@@ -150,16 +291,33 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "見出し", "default": "お客様の声（自作版）" },
     { "type": "text", "id": "subheading", "label": "サブ見出し", "default": "Judge.meのデータをLiquidで自作表示" },
+    { "type": "header", "content": "表示" },
     { "type": "select", "id": "layout", "label": "表示スタイル", "default": "carousel", "options": [
-      { "value": "carousel", "label": "カルーセル（全幅・自動スクロール）" },
-      { "value": "grid", "label": "グリッド（3列）" }
+      { "value": "carousel", "label": "カルーセル（全幅・1枚ずつ送り）" },
+      { "value": "grid", "label": "グリッド" }
     ] },
-    { "type": "range", "id": "speed", "min": 20, "max": 90, "step": 5, "unit": "s", "label": "スクロール一周の秒数（カルーセル）", "default": 45 },
-    { "type": "collection", "id": "collection", "label": "対象コレクション（未指定なら全商品）" },
-    { "type": "range", "id": "max_reviews", "min": 3, "max": 12, "step": 1, "label": "表示するレビュー数", "default": 8 },
+    { "type": "range", "id": "visible", "min": 3, "max": 6, "step": 1, "label": "1行の表示枚数（PC・カルーセル）", "default": 5 },
+    { "type": "range", "id": "speed", "min": 20, "max": 90, "step": 5, "unit": "s", "label": "一周の秒数（カルーセル）", "default": 45 },
     { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "列数（グリッド時）", "default": 3 },
+    { "type": "range", "id": "body_lines", "min": 2, "max": 6, "step": 1, "label": "本文の表示行数（超過は…で省略）", "default": 3 },
+    { "type": "header", "content": "デザイン" },
+    { "type": "color", "id": "star_color", "label": "星・ボタンの色", "default": "#1f7a5a" },
+    { "type": "color", "id": "card_bg", "label": "カード背景色", "default": "#ffffff" },
+    { "type": "color", "id": "card_border", "label": "カード枠線色", "default": "#ece8e1" },
+    { "type": "range", "id": "card_radius", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "カード角丸", "default": 6 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "配色（背景）", "default": "scheme-1" },
+    { "type": "header", "content": "全文モーダル" },
+    { "type": "checkbox", "id": "enable_modal", "label": "クリックで全文モーダルを表示", "default": true },
+    { "type": "text", "id": "read_more_label", "label": "「続きを読む」の文言", "default": "続きを読む" },
+    { "type": "text", "id": "product_button_label", "label": "モーダルの商品ボタン文言", "default": "この商品を見る →" },
+    { "type": "header", "content": "項目の表示" },
+    { "type": "checkbox", "id": "show_summary", "label": "評価サマリー（平均★・件数）を見出し下に表示", "default": true },
+    { "type": "checkbox", "id": "show_product", "label": "商品名を表示", "default": true },
+    { "type": "checkbox", "id": "show_date", "label": "日付を表示", "default": true },
     { "type": "range", "id": "min_rating", "min": 1, "max": 5, "step": 1, "label": "表示する最低★評価", "default": 1 },
-    { "type": "color_scheme", "id": "color_scheme", "label": "配色", "default": "scheme-1" },
+    { "type": "range", "id": "max_reviews", "min": 3, "max": 12, "step": 1, "label": "表示するレビュー数", "default": 8 },
+    { "type": "collection", "id": "collection", "label": "対象コレクション（未指定なら全商品）" },
+    { "type": "header", "content": "余白" },
     { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "上余白", "default": 64 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "下余白", "default": 64 }
   ],
