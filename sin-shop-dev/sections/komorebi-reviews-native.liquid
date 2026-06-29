@@ -87,6 +87,7 @@
     #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary-text { font-size: 1.4rem; opacity: 0.75; }
     #komorebi-nrev-{{ section.id }} .komorebi-nrev__summary-text .komorebi-nrev__summary-star { color: var(--nrev-star, #1f7a5a); }
     #komorebi-nrev-{{ section.id }} .komorebi-nrev__body { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: {{ section.settings.body_lines }}; line-clamp: {{ section.settings.body_lines }}; overflow: hidden; }
+    #komorebi-nrev-{{ section.id }} .komorebi-nrev__stars { font-size: {{ section.settings.star_size }}px; }
   </style>
   <div class="page-width">
     {%- if section.settings.heading != blank -%}<h2 class="komorebi-nrev__heading">{{ section.settings.heading | escape }}</h2>{%- endif -%}
@@ -302,6 +303,7 @@
     { "type": "range", "id": "body_lines", "min": 2, "max": 6, "step": 1, "label": "本文の表示行数（超過は…で省略）", "default": 3 },
     { "type": "header", "content": "デザイン" },
     { "type": "color", "id": "star_color", "label": "星・ボタンの色", "default": "#1f7a5a" },
+    { "type": "range", "id": "star_size", "min": 14, "max": 36, "step": 1, "unit": "px", "label": "星の大きさ（カード）", "default": 24 },
     { "type": "color", "id": "card_bg", "label": "カード背景色", "default": "#ffffff" },
     { "type": "color", "id": "card_border", "label": "カード枠線色", "default": "#ece8e1" },
     { "type": "range", "id": "card_radius", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "カード角丸", "default": 6 },
