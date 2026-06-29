@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "image_banner": {
@@ -38,13 +47,177 @@
         "image": "shopify://shop_images/komorebi-hero.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
+        "image_behavior": "none",
         "desktop_content_position": "middle-left",
-        "show_text_box": false,
         "desktop_content_alignment": "left",
+        "show_text_box": false,
         "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
         "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
         "show_text_below": false
+      }
+    },
+    "komorebi_usp": {
+      "type": "komorebi-usp",
+      "blocks": {
+        "u1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "¥10,000以上で送料無料",
+            "subtext": "全国一律・対象外地域なし"
+          }
+        },
+        "u2": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "title": "上質な天然素材",
+            "subtext": "厳選した素材だけを使用"
+          }
+        },
+        "u3": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "title": "30日間返品OK",
+            "subtext": "安心してお試しください"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "all",
+        "products_to_show": 8,
+        "title": "おすすめ商品",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 28,
+        "padding_bottom": 36
+      }
+    },
+    "collection_list": {
+      "type": "collection-list",
+      "blocks": {
+        "tops": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "トップス"
+          }
+        },
+        "bottoms": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "ボトムス"
+          }
+        },
+        "goods": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "雑貨"
+          }
+        }
+      },
+      "block_order": [
+        "tops",
+        "bottoms",
+        "goods"
+      ],
+      "settings": {
+        "title": "カテゴリーから探す",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "scheme-1",
+        "show_view_all": false,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "feature": {
+      "type": "image-with-text",
+      "blocks": {
+        "caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "FEATURE",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "リネンという、心地よさ",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>通気性にすぐれ、使うほどにやわらかく肌になじむリネン。季節を問わず心地よく、一枚で日常を上質に整えます。</p>",
+            "text_style": "body"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "商品を見る",
+            "button_link": "shopify://collections/all",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "caption",
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/komorebi-feature.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "scheme-1",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "rich_text": {
@@ -60,7 +233,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>「木漏れ日」のように、やわらかく日常に寄り添うブランドです。リネン・オーガニックコットン・ウールなど、肌になじむ天然素材だけを厳選し、流行に左右されないシンプルなデザインに仕立てています。<\/p><p>大切にしているのは、長く愛せること。着るほどに体になじみ、暮らしに静かな心地よさをもたらす——そんな日常着と暮らしの道具を、ひとつひとつ丁寧にお届けします。<\/p>"
+            "text": "<p>「木漏れ日」のように、やわらかく日常に寄り添うブランドです。リネン・オーガニックコットン・ウールなど、肌になじむ天然素材だけを厳選し、流行に左右されないシンプルなデザインに仕立てています。</p><p>大切にしているのは、長く愛せること。着るほどに体になじみ、暮らしに静かな心地よさをもたらす——そんな日常着と暮らしの道具を、ひとつひとつ丁寧にお届けします。</p>"
           }
         }
       },
@@ -69,30 +242,12 @@
         "text"
       ],
       "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
         "color_scheme": "scheme-1",
         "full_width": true,
         "padding_top": 72,
         "padding_bottom": 72
-      }
-    },
-    "featured_collection": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "おすすめ商品",
-        "heading_size": "h2",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "show_view_all": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "square",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "columns_mobile": "2",
-        "padding_top": 28,
-        "padding_bottom": 36
       }
     },
     "komorebi_promise": {
@@ -103,7 +258,7 @@
           "settings": {
             "icon": "leaf",
             "heading": "上質な天然素材",
-            "text": "<p>リネンやオーガニックコットン、ウールなど、肌に心地よい天然素材だけを厳選しています。季節を問わず快適に着られ、使うほどに風合いを増していきます。<\/p>"
+            "text": "<p>リネンやオーガニックコットン、ウールなど、肌に心地よい天然素材だけを厳選しています。季節を問わず快適に着られ、使うほどに風合いを増していきます。</p>"
           }
         },
         "b2": {
@@ -111,7 +266,7 @@
           "settings": {
             "icon": "scissors",
             "heading": "丁寧なものづくり",
-            "text": "<p>シンプルなデザインだからこそ、縫製やシルエットの細部まで妥協しません。長く着ても型崩れしにくい、丁寧な仕立てを大切にしています。<\/p>"
+            "text": "<p>シンプルなデザインだからこそ、縫製やシルエットの細部まで妥協しません。長く着ても型崩れしにくい、丁寧な仕立てを大切にしています。</p>"
           }
         },
         "b3": {
@@ -119,11 +274,15 @@
           "settings": {
             "icon": "hanger",
             "heading": "長く使えるデザイン",
-            "text": "<p>流行に左右されない、ベーシックで上質なデザイン。何年先も気持ちよく着られる、毎日の定番になる一着をお届けします。<\/p>"
+            "text": "<p>流行に左右されない、ベーシックで上質なデザイン。何年先も気持ちよく着られる、毎日の定番になる一着をお届けします。</p>"
           }
         }
       },
-      "block_order": ["b1", "b2", "b3"],
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
       "settings": {
         "heading": "Komorebiの約束",
         "color_scheme": "scheme-2",
@@ -131,60 +290,35 @@
         "padding_bottom": 64
       }
     },
-    "collection_list": {
-      "type": "collection-list",
-      "blocks": {
-        "tops": { "type": "featured_collection", "settings": { "collection": "トップス" } },
-        "bottoms": { "type": "featured_collection", "settings": { "collection": "ボトムス" } },
-        "goods": { "type": "featured_collection", "settings": { "collection": "雑貨" } }
-      },
-      "block_order": ["tops", "bottoms", "goods"],
+    "komorebi_reviews_native_q8aP44": {
+      "type": "komorebi-reviews-native",
+      "name": "レビュー（自作版）",
       "settings": {
-        "title": "カテゴリーから探す",
-        "image_ratio": "square",
-        "columns_desktop": 3,
+        "heading": "お客様の声（自作版）",
+        "subheading": "Judge.meのデータをLiquidで自作表示",
+        "layout": "carousel",
+        "visible": 5,
+        "speed": 45,
+        "columns": 3,
+        "body_lines": 3,
+        "star_color": "#1f7a5a",
+        "star_size": 24,
+        "card_bg": "#ffffff",
+        "card_border": "#ece8e1",
+        "card_radius": 6,
         "color_scheme": "scheme-1",
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "enable_modal": true,
+        "read_more_label": "続きを読む",
+        "product_button_label": "この商品を見る →",
+        "show_summary": true,
+        "show_product": true,
+        "show_date": true,
+        "min_rating": 1,
+        "max_reviews": 6,
+        "collection": "",
+        "padding_top": 64,
+        "padding_bottom": 64
       }
-    },
-    "komorebi_usp": {
-      "type": "komorebi-usp",
-      "blocks": {
-        "u1": { "type": "item", "settings": { "icon": "truck", "title": "¥10,000以上で送料無料", "subtext": "全国一律・対象外地域なし" } },
-        "u2": { "type": "item", "settings": { "icon": "leaf", "title": "上質な天然素材", "subtext": "厳選した素材だけを使用" } },
-        "u3": { "type": "item", "settings": { "icon": "return", "title": "30日間返品OK", "subtext": "安心してお試しください" } }
-      },
-      "block_order": ["u1", "u2", "u3"],
-      "settings": { "color_scheme": "scheme-2", "padding_top": 28, "padding_bottom": 28 }
-    },
-    "feature": {
-      "type": "image-with-text",
-      "blocks": {
-        "caption": { "type": "caption", "settings": { "caption": "FEATURE", "text_style": "caption-with-letter-spacing", "text_size": "medium" } },
-        "heading": { "type": "heading", "settings": { "heading": "リネンという、心地よさ", "heading_size": "h1" } },
-        "text": { "type": "text", "settings": { "text": "<p>通気性にすぐれ、使うほどにやわらかく肌になじむリネン。季節を問わず心地よく、一枚で日常を上質に整えます。<\/p>", "text_style": "body" } },
-        "button": { "type": "button", "settings": { "button_label": "商品を見る", "button_link": "shopify://collections/all", "button_style_secondary": false } }
-      },
-      "block_order": ["caption", "heading", "text", "button"],
-      "settings": {
-        "image": "shopify://shop_images/komorebi-feature.jpg",
-        "layout": "image_first",
-        "color_scheme": "scheme-1",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "komorebi_reviews": {
-      "type": "komorebi-reviews",
-      "blocks": {
-        "rv1": { "type": "review", "settings": { "rating": 5, "quote": "肌ざわりがよく、毎日着たくなります。洗うほどに馴染むのも気に入っています。", "author": "東京都・30代 / A.K" } },
-        "rv2": { "type": "review", "settings": { "rating": 5, "quote": "シンプルで上質。長く使える定番に出会えました。", "author": "大阪府・40代 / M.S" } },
-        "rv3": { "type": "review", "settings": { "rating": 4, "quote": "素材が良く、合わせやすいです。また購入したいと思います。", "author": "福岡県・20代 / Y.T" } }
-      },
-      "block_order": ["rv1", "rv2", "rv3"],
-      "settings": { "heading": "お客様の声", "color_scheme": "scheme-1", "padding_top": 64, "padding_bottom": 64 }
     }
   },
   "order": [
@@ -195,6 +329,6 @@
     "feature",
     "rich_text",
     "komorebi_promise",
-    "komorebi_reviews"
+    "komorebi_reviews_native_q8aP44"
   ]
 }
